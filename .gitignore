@@ -1,0 +1,84 @@
+# -----------------------
+# Virtual Environment
+# -----------------------
+.venv/
+
+# -----------------------
+# Python
+# -----------------------
+__pycache__/
+*.py[cod]
+*.pyo
+
+# -----------------------
+# Jupyter
+# -----------------------
+.ipynb_checkpoints/
+
+# -----------------------
+# MLflow
+# -----------------------
+mlruns/
+
+# -----------------------
+# Model Files
+# -----------------------
+*.pt
+*.pth
+*.onnx
+
+# -----------------------
+# Logs
+# -----------------------
+logs/
+*.log
+
+# -----------------------
+# Environment Variables
+# -----------------------
+.env
+
+# -----------------------
+# VS Code
+# -----------------------
+.vscode/
+
+# -----------------------
+# Pytest
+# -----------------------
+.pytest_cache/
+
+# -----------------------
+# Coverage
+# -----------------------
+.coverage
+htmlcov/
+
+# -----------------------
+# Temporary Files
+# -----------------------
+temp/
+tmp/
+
+# -----------------------
+# Operating System
+# -----------------------
+Thumbs.db
+.DS_Store
+
+# Mac/Linux
+*.swp
+
+# Python cache
+.pytest_cache/
+.mypy_cache/
+
+# Distribution
+dist/
+build/
+
+# Packaging
+*.egg-info/
+
+# Local settings
+*.local
