@@ -20,11 +20,53 @@ import config
 
 IMG_EXTS = {".jpg", ".jpeg", ".png", ".bmp"}
 
-
 def find_data_root(base: Path | None = None) -> Path:
-    # TODO 1: search under (base or config.DATA_DIR) for a dir whose train/ has both
-    #         ok_front and def_front subfolders; return it.
-    raise NotImplementedError("Locate the casting train/test root")
+    """
+    Locate the casting dataset root.
+
+    Expected structure:
+        data/
+        └── casting_data/
+            ├── train/
+            │   ├── ok_front/
+            │   └── def_front/
+            └── test/
+                ├── ok_front/
+                └── def_front/
+
+    Parameters
+    ----------
+    base : Path | None
+        Optional base directory. If None, config.DATA_DIR is used.
+
+    Returns
+    -------
+    Path
+        Path to the dataset root (casting_data).
+
+    Raises
+    ------
+    FileNotFoundError
+        If the expected dataset structure is not found.
+    """
+
+    search_root = Path(base) if base else Path(config.DATA_DIR)
+
+    dataset_root = (search_root / "casting_data").resolve()
+
+    required_dirs = [
+        dataset_root / "train" / "ok_front",
+        dataset_root / "train" / "def_front",
+        dataset_root / "test" / "ok_front",
+        dataset_root / "test" / "def_front",
+    ]
+
+    if all(path.is_dir() for path in required_dirs):
+        return dataset_root.resolve()
+
+    raise FileNotFoundError(
+        f"Casting dataset not found under: {search_root}"
+    )
 
 
 def list_images(split_dir: Path) -> list[tuple[Path, int]]:
@@ -37,10 +79,87 @@ def list_images(split_dir: Path) -> list[tuple[Path, int]]:
 
 
 def validate_quality(root: Path) -> dict:
-    # TODO 1 (data quality): for train+test, count images + class distribution; open each
-    #         image (catch corrupt); record non-300x300 dims; md5-hash to find duplicates.
-    #         Return a report dict with issues + a 'passed' flag.
-    raise NotImplementedError("Implement data-quality validation")
+    """
+    Perform dataset quality validation.
+
+    Parameters
+    ----------
+    root : Path
+        Dataset root containing train/ and test/ folders.
+
+    Returns
+    -------
+    dict
+        Dataset quality report.
+    """
+
+    report = {
+    "passed": True,
+    "total_images": 0,
+
+    "corrupt_images": [],
+    "corrupt_count": 0,
+
+    "invalid_dimensions": [],
+    "invalid_dimension_count": 0,
+
+    "duplicate_images": [],
+    "duplicate_count": 0,
+
+    "class_distribution": {}
+}
+
+    total_images = 0
+
+    for split in ["train", "test"]:
+
+        split_dir = root / split
+
+        images = list_images(split_dir)
+
+        report["class_distribution"][split] = {}
+
+        class_counter = Counter()
+
+        for _, label in images:
+            class_counter[label] += 1
+        
+        for image_path, _ in images:
+
+            try:
+
+                # Verify image integrity
+                  with Image.open(image_path) as img:
+                     img.verify()
+
+                # Re-open image to check dimensions
+                  with Image.open(image_path) as img:
+
+                       if img.size != (300, 300):
+
+                          report["invalid_dimensions"].append(
+                              {
+                                 "file": str(image_path),
+                                  "size": img.size
+                             }
+                        )
+
+            except (UnidentifiedImageError, OSError):
+
+                 report["corrupt_images"].append(str(image_path))
+
+        for class_name, class_idx in config.CLASS_TO_IDX.items():
+            report["class_distribution"][split][class_name] = class_counter.get(class_idx, 0)
+
+        total_images += len(images)
+
+    report["total_images"] = total_images
+
+    report["corrupt_count"] = len(report["corrupt_images"])
+
+    report["invalid_dimension_count"] = len(report["invalid_dimensions"])
+
+    return report
 
 
 def build_splits(root: Path, version: str = "v1") -> dict:
