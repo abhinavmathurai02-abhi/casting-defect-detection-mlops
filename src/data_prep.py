@@ -20,6 +20,10 @@ import config
 
 IMG_EXTS = {".jpg", ".jpeg", ".png", ".bmp"}
 
+# ==========================================================
+# Dataset Discovery
+# ==========================================================
+
 def find_data_root(base: Path | None = None) -> Path:
     """
     Locate the casting dataset root.
@@ -78,6 +82,48 @@ def list_images(split_dir: Path) -> list[tuple[Path, int]]:
     return items
 
 
+# ==========================================================
+# Utility Functions
+# ==========================================================
+
+def compute_md5(file_path: Path) -> str:
+    """
+    Compute the MD5 hash of an image file.
+
+    Reading the file in chunks keeps memory usage low and
+    works efficiently even for large files.
+
+    Parameters
+    ----------
+    file_path : Path
+        Path to the image file.
+
+    Returns
+    -------
+    str
+        MD5 hash represented as a hexadecimal string.
+    """
+
+    md5_hash = hashlib.md5()
+
+    with open(file_path, "rb") as file:
+
+        while True:
+
+            chunk = file.read(8192)
+
+            if not chunk:
+                break
+
+            md5_hash.update(chunk)
+
+    return md5_hash.hexdigest()
+
+
+# ==========================================================
+# Dataset Validation
+# ==========================================================
+
 def validate_quality(root: Path) -> dict:
     """
     Perform dataset quality validation.
@@ -95,6 +141,8 @@ def validate_quality(root: Path) -> dict:
 
     report = {
     "passed": True,
+    "warnings": [],
+
     "total_images": 0,
 
     "corrupt_images": [],
@@ -108,6 +156,8 @@ def validate_quality(root: Path) -> dict:
 
     "class_distribution": {}
 }
+    
+    hash_registry = {}
 
     total_images = 0
 
@@ -138,11 +188,34 @@ def validate_quality(root: Path) -> dict:
                        if img.size != (300, 300):
 
                           report["invalid_dimensions"].append(
-                              {
-                                 "file": str(image_path),
-                                  "size": img.size
-                             }
-                        )
+                                 {
+                                    "file": str(image_path),
+                                    "size": img.size
+                                 }
+                          )
+                # Compute image hash for duplicate detection
+                  image_hash = compute_md5(image_path)
+
+                  if image_hash in hash_registry:
+                            
+                            original_path = hash_registry[image_hash]
+
+                            original_split = original_path.parts[-3]
+                            duplicate_split = image_path.parts[-3]
+
+                            report["duplicate_images"].append(
+                               {
+                                  "hash": image_hash,
+                                  "original": str(original_path),
+                                  "duplicate": str(image_path),
+                                  "cross_split": original_split != duplicate_split
+
+                               }
+                            )
+
+                  else:
+                        hash_registry[image_hash] = image_path
+                        
 
             except (UnidentifiedImageError, OSError):
 
@@ -159,8 +232,28 @@ def validate_quality(root: Path) -> dict:
 
     report["invalid_dimension_count"] = len(report["invalid_dimensions"])
 
+    report["duplicate_count"] = len(report["duplicate_images"])
+
+# Add warning if duplicates were detected
+    if report["duplicate_count"] > 0:
+
+        report["warnings"].append(
+            f"{report['duplicate_count']} duplicate images detected. "
+            "Review potential train-test data leakage."
+    )
+
+# Hard failures only
+    report["passed"] = (
+        report["corrupt_count"] == 0
+        and report["invalid_dimension_count"] == 0
+)
+
     return report
 
+
+# ==========================================================
+# Dataset Versioning
+# ==========================================================
 
 def build_splits(root: Path, version: str = "v1") -> dict:
     # TODO 1 (versioning): stratified val carve-out from train/; test from test/. Save
@@ -174,12 +267,20 @@ def load_split(version: str, name: str, root: Path) -> list[tuple[Path, int]]:
     return [(root / r, y) for r, y in rel]
 
 
+# ==========================================================
+# Transforms
+# ==========================================================
+
 def get_transforms(train: bool):
     from torchvision import transforms
     # TODO 2 (preprocessing + augmentation): Grayscale(3) → Resize(224) → [train: flip,
     #         affine rotation/translate, ColorJitter] → ToTensor → Normalize(ImageNet).
     raise NotImplementedError("Define the train/eval transforms")
 
+
+# ==========================================================
+# Feature Extraction
+# ==========================================================
 
 def image_features(img: Image.Image) -> dict:
     # TODO 4 (statistical drift): return brightness, contrast, edge_density, sharpness,
