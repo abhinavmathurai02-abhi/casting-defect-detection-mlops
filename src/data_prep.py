@@ -487,6 +487,117 @@ def get_transforms(train: bool):
 # ==========================================================
 
 def image_features(img: Image.Image) -> dict:
-    # TODO 4 (statistical drift): return brightness, contrast, edge_density, sharpness,
-    #         mean_intensity for a PIL image (keys == config.DRIFT_FEATURES).
-    raise NotImplementedError("Extract per-image drift features")
+    """
+    Extract statistical image features used for
+    exploratory data analysis and drift monitoring.
+
+    Parameters
+    ----------
+    img : PIL.Image
+
+    Returns
+    -------
+    dict
+    """
+
+    # ----------------------------------------
+    # Convert to grayscale
+    # ----------------------------------------
+
+    gray = img.convert("L")
+
+    # ----------------------------------------
+    # Brightness & Mean Intensity
+    # ----------------------------------------
+
+    stat = ImageStat.Stat(gray)
+
+    brightness = stat.mean[0]
+
+    mean_intensity = stat.mean[0]
+
+    # ----------------------------------------
+    # Contrast
+    # ----------------------------------------
+
+    contrast = stat.stddev[0]
+
+    # ----------------------------------------
+    # Sharpness
+    # ----------------------------------------
+
+    sharpness = ImageStat.Stat(
+        gray.filter(ImageFilter.FIND_EDGES)
+    ).stddev[0]
+
+    # ----------------------------------------
+    # Edge Density
+    # ----------------------------------------
+
+    edges = gray.filter(ImageFilter.FIND_EDGES)
+
+    edge_array = np.array(edges)
+
+    edge_density = np.mean(edge_array > 20)
+
+    return {
+
+        "brightness": round(brightness, 3),
+
+        "contrast": round(contrast, 3),
+
+        "edge_density": round(float(edge_density), 3),
+
+        "sharpness": round(sharpness, 3),
+
+        "mean_intensity": round(mean_intensity, 3)
+
+    }
+
+import pandas as pd
+
+
+def extract_feature_table(root: Path) -> pd.DataFrame:
+    """
+    Extract statistical image features for every image
+    in the dataset.
+
+    Parameters
+    ----------
+    root : Path
+        Dataset root.
+
+    Returns
+    -------
+    pandas.DataFrame
+    """
+
+    records = []
+
+    for split in ["train", "test"]:
+
+        split_dir = root / split
+
+        images = list_images(split_dir)
+
+        for image_path, label in images:
+
+            img = Image.open(image_path)
+
+            features = image_features(img)
+
+            record = {
+
+                "split": split,
+
+                "class": config.IDX_TO_CLASS[label],
+
+                "image_path": str(image_path.relative_to(root))
+
+            }
+
+            record.update(features)
+
+            records.append(record)
+
+    return pd.DataFrame(records)
