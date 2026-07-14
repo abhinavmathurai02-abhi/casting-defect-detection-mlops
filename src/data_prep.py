@@ -476,10 +476,100 @@ def load_split(version: str, name: str, root: Path) -> list[tuple[Path, int]]:
 # ==========================================================
 
 def get_transforms(train: bool):
+    """
+    Build image preprocessing and augmentation pipeline.
+
+    Parameters
+    ----------
+    train : bool
+        True for training transforms.
+        False for validation/test transforms.
+
+    Returns
+    -------
+    torchvision.transforms.Compose
+    """
+
     from torchvision import transforms
-    # TODO 2 (preprocessing + augmentation): Grayscale(3) → Resize(224) → [train: flip,
-    #         affine rotation/translate, ColorJitter] → ToTensor → Normalize(ImageNet).
-    raise NotImplementedError("Define the train/eval transforms")
+
+    # ---------------------------------------
+    # Common preprocessing
+    # ---------------------------------------
+
+    common = [
+
+        transforms.Grayscale(num_output_channels=3),
+
+        transforms.Resize(
+            (config.IMG_SIZE, config.IMG_SIZE)
+        )
+
+    ]
+
+    # ---------------------------------------
+    # Training augmentation
+    # ---------------------------------------
+
+    if train:
+
+        augment = [
+
+            transforms.RandomHorizontalFlip(
+                p=config.AUG["hflip_p"]
+            ),
+
+            transforms.RandomAffine(
+
+                degrees=config.AUG["rotation_degrees"],
+
+                translate=(
+                    config.AUG["translate"],
+                    config.AUG["translate"]
+                )
+
+            ),
+
+            transforms.ColorJitter(
+
+                brightness=config.AUG["brightness"],
+
+                contrast=config.AUG["contrast"]
+
+            )
+
+        ]
+
+    else:
+
+        augment = []
+
+    # ---------------------------------------
+    # Tensor conversion + normalization
+    # ---------------------------------------
+
+    finish = [
+
+        transforms.ToTensor(),
+
+        transforms.Normalize(
+
+            mean=config.IMAGENET_MEAN,
+
+            std=config.IMAGENET_STD
+
+        )
+
+    ]
+
+    return transforms.Compose(
+
+        common +
+
+        augment +
+
+        finish
+
+    )
 
 
 # ==========================================================
