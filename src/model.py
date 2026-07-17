@@ -13,13 +13,61 @@ import torch.nn as nn
 import sys
 sys.path.append(str(Path(__file__).resolve().parent.parent))
 import config
+from torchvision.models import resnet18, ResNet18_Weights
 
+
+from torchvision.models import resnet18, ResNet18_Weights
 
 def build_model(freeze: bool | None = None) -> nn.Module:
-    # TODO 2: load torchvision resnet18 with ImageNet weights; if freeze, set
-    #         requires_grad=False on backbone params; replace net.fc with a
-    #         nn.Linear(in_features, config.NUM_CLASSES) trainable head.
-    raise NotImplementedError("Build the ResNet18 transfer-learning model")
+    """
+    Build an ImageNet-pretrained ResNet18 for binary classification.
+
+    Parameters
+    ----------
+    freeze : bool | None, optional
+        Whether to freeze the pretrained backbone.
+        If None, uses config.FREEZE_BACKBONE.
+
+    Returns
+    -------
+    nn.Module
+        Configured ResNet18 model.
+    """
+
+    if freeze is None:
+        freeze = config.FREEZE_BACKBONE
+
+    # Load pretrained ResNet18
+    net = resnet18(weights=ResNet18_Weights.DEFAULT)
+
+    # Freeze backbone parameters
+    if freeze:
+        for param in net.parameters():
+            param.requires_grad = False
+
+    # Replace the final classification layer
+    in_features = net.fc.in_features
+    net.fc = nn.Linear(
+        in_features=in_features,
+        out_features=config.NUM_CLASSES,
+    )
+
+    # Ensure the new head is trainable
+    for param in net.fc.parameters():
+        param.requires_grad = True
+
+    # Print model statistics
+    total_params = sum(p.numel() for p in net.parameters())
+    trainable_params = sum(
+        p.numel() for p in net.parameters()
+        if p.requires_grad
+    )
+
+    print(f"Total Parameters     : {total_params:,}")
+    print(f"Trainable Parameters : {trainable_params:,}")
+    print(f"Frozen Parameters     : {total_params - trainable_params:,}")
+
+    return net
 
 
 def trainable_parameters(net: nn.Module):
