@@ -18,15 +18,54 @@ from src import data_prep, evaluate
 from src.dataset import CastingDataset
 from src.model import build_model, trainable_parameters, save_model, EmbeddingExtractor
 from torch.utils.data import DataLoader
-
+from collections import defaultdict
 
 def set_seed(seed: int = config.RANDOM_SEED):
     random.seed(seed); np.random.seed(seed); torch.manual_seed(seed)
 
 
-def _subsample(items, cap):
-    # TODO: stratified subsample to `cap` (or return items if cap falsy/too small).
-    raise NotImplementedError
+def _subsample(items: list, cap: int | None) -> list:
+    """
+    Return a stratified random subset of dataset items.
+
+    Parameters
+    ----------
+    items : list
+        List of [relative_path, class_label].
+
+    cap : int | None
+        Maximum number of samples to retain.
+
+    Returns
+    -------
+    list
+        Stratified subset preserving class distribution.
+    """
+
+    if cap is None or cap <= 0 or cap >= len(items):
+        return items
+
+    grouped = defaultdict(list)
+
+    for item in items:
+        grouped[item[1]].append(item)
+
+    subset = []
+
+    for samples in grouped.values():
+
+        n = round(len(samples) / len(items) * cap)
+
+        subset.extend(
+            random.sample(
+                samples,
+                min(n, len(samples))
+            )
+        )
+
+    random.shuffle(subset)
+
+    return subset
 
 
 def class_weights(items) -> torch.Tensor:
