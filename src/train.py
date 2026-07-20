@@ -20,6 +20,9 @@ from src.model import build_model, trainable_parameters, save_model, EmbeddingEx
 from torch.utils.data import DataLoader
 from collections import Counter, defaultdict
 from sklearn.metrics import accuracy_score, f1_score
+import mlflow
+import mlflow.pytorch
+from mlflow import MlflowClient
 
 
 def set_seed(seed: int = config.RANDOM_SEED):
@@ -324,6 +327,18 @@ def fit(
             f"Val F1: {val_metrics['val_f1']:.4f}"
         )
 
+        mlflow.log_metrics(
+            {
+                 "train_loss": train_metrics["train_loss"],
+                 "train_accuracy": train_metrics["train_accuracy"],
+                 "train_f1": train_metrics["train_f1"],
+                 "val_loss": val_metrics["val_loss"],
+                 "val_accuracy": val_metrics["val_accuracy"],
+                 "val_f1": val_metrics["val_f1"],
+           },
+           step=epoch + 1,
+       )
+
         if val_metrics["val_f1"] > best_val_f1:
 
             best_val_f1 = val_metrics["val_f1"]
@@ -344,7 +359,7 @@ def fit(
             break
 
     model_meta = {
-        "backbone": config.BACKBONE,
+    "backbone": config.BACKBONE,
     "freeze_backbone": config.FREEZE_BACKBONE,
     "best_epoch": best_epoch,
     "epochs_trained": len(history["train_loss"]),
@@ -357,9 +372,16 @@ def fit(
     return history, model_meta
 
 def main() -> int:
-    import mlflow, mlflow.pytorch
-    from mlflow import MlflowClient
+    
     set_seed()
+
+    # -------------------------------------------------
+    # MLflow setup
+    # -------------------------------------------------
+    mlflow.set_tracking_uri(config.MLFLOW_TRACKING_URI)
+
+    mlflow.set_experiment(config.MLFLOW_EXPERIMENT)
+
     root = data_prep.find_data_root()
     qc = data_prep.validate_quality(root)
     (config.ARTIFACT_DIR / "data_quality_report.json").write_text(json.dumps(qc, indent=2))
@@ -396,41 +418,88 @@ def main() -> int:
     weight_decay=config.WEIGHT_DECAY,
     )
     
-    # -------------------------------------------------
-    # Training
-    # -------------------------------------------------
-    history, model_meta = fit(
-        model,
-        train_loader,
-        val_loader,
-        criterion,
-        optimizer,
-    )
+    with mlflow.start_run(
+        run_name=f"{config.BACKBONE}_freeze_{config.FREEZE_BACKBONE}"
+    ):
 
+        # Log experiment parameters
 
-    # -------------------------------------------------
-    # Add metadata
-    # -------------------------------------------------
-    model_meta.update(
-        {
+        mlflow.log_params(
+           {
             "backbone": config.BACKBONE,
             "freeze_backbone": config.FREEZE_BACKBONE,
             "batch_size": config.BATCH_SIZE,
             "learning_rate": config.LEARNING_RATE,
+            "epochs": config.EPOCHS,
+            "weight_decay": config.WEIGHT_DECAY,
             "random_seed": config.RANDOM_SEED,
-        }
-    )
+            "optimizer": "Adam",
+            "loss_function": "CrossEntropyLoss",
+            "device": config.DEVICE,
+            "num_classes": config.NUM_CLASSES,
+           }
+        )
+
+    # TODO 3 (MLflow): set_experiment; start_run; log_params; per-epoch log_metrics; early stop.
+    # TODO 3 (eval + registry): test metrics; plot_eval; save_model; log_model + register +
+    #         set @production alias; write model_meta.json + metrics.json.
+    # TODO 4: save_reference_baseline on a clean val sample.
+
+    # -------------------------------------------------
+    # Training
+    # -------------------------------------------------
+        history, model_meta = fit(
+             model,
+             train_loader,
+             val_loader,
+             criterion,
+             optimizer,
+        )
+    
+    # -----------------------------
+    # Log trained model
+    # -----------------------------
+        mlflow.pytorch.log_model(
+            pytorch_model=model,
+            name="model",
+        )
+
+        mlflow.log_metric(
+            "best_val_f1",
+            model_meta["best_val_f1"],
+        )
+    # -------------------------------------------------
+    # Add metadata
+    # -------------------------------------------------
+        model_meta.update(
+              {
+                 "backbone": config.BACKBONE,
+                 "freeze_backbone": config.FREEZE_BACKBONE,
+                 "batch_size": config.BATCH_SIZE,
+                 "learning_rate": config.LEARNING_RATE,
+                 "random_seed": config.RANDOM_SEED,
+              }
+       )
 
      # -------------------------------------------------
-    # Save artifacts
+    # Save JSON artifacts
     # -------------------------------------------------
-    config.MODEL_META_PATH.write_text(
-        json.dumps(model_meta, indent=2)
-    )
+        config.MODEL_META_PATH.write_text(
+            json.dumps(model_meta, indent=2)
+        )
 
-    config.METRICS_PATH.write_text(
-        json.dumps(history, indent=2)
-    )
+        config.METRICS_PATH.write_text(
+            json.dumps(history, indent=2)
+        )
+
+    # -----------------------------
+    # Log artifacts to MLflow
+    # -----------------------------
+        mlflow.log_artifact(str(config.MODEL_META_PATH))
+        mlflow.log_artifact(str(config.METRICS_PATH))
+        mlflow.log_artifact(
+            str(config.ARTIFACT_DIR / "data_quality_report.json")
+        )
 
     print("\nTraining completed successfully.")
 
@@ -439,10 +508,7 @@ def main() -> int:
 
     return 0
 
-    # TODO 3 (MLflow): set_experiment; start_run; log_params; per-epoch log_metrics; early stop.
-    # TODO 3 (eval + registry): test metrics; plot_eval; save_model; log_model + register +
-    #         set @production alias; write model_meta.json + metrics.json.
-    # TODO 4: save_reference_baseline on a clean val sample.
+
 
 
 
