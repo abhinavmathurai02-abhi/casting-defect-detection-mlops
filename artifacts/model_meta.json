@@ -1,0 +1,10 @@
+{
+  "backbone": "resnet18",
+  "freeze_backbone": true,
+  "best_epoch": 1,
+  "epochs_trained": 4,
+  "best_val_f1": 0.7272727272727273,
+  "learning_rate": 0.001,
+  "batch_size": 32,
+  "random_seed": 42
+}

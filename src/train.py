@@ -19,6 +19,7 @@ from src.dataset import CastingDataset, make_loaders
 from src.model import build_model, trainable_parameters, save_model, EmbeddingExtractor
 from torch.utils.data import DataLoader
 from collections import Counter, defaultdict
+from sklearn.metrics import accuracy_score, f1_score
 
 
 def set_seed(seed: int = config.RANDOM_SEED):
@@ -115,6 +116,246 @@ def save_reference_baseline(net, ref_items) -> dict:
     raise NotImplementedError
 
 
+def train_one_epoch(
+    model: nn.Module,
+    loader: DataLoader,
+    criterion: nn.Module,
+    optimizer: torch.optim.Optimizer,
+) -> dict:
+    """
+    Train the model for one epoch.
+
+    Parameters
+    ----------
+    model : nn.Module
+        Model to train.
+
+    loader : DataLoader
+        Training data loader.
+
+    criterion : nn.Module
+        Loss function.
+
+    optimizer : torch.optim.Optimizer
+        Optimizer.
+
+    Returns
+    -------
+    dict
+        Dictionary containing training loss, accuracy and F1 score.
+    """
+
+    model.train()
+
+    running_loss = 0.0
+
+    all_labels = []
+    all_predictions = []
+
+    for images, labels in loader:
+
+        images = images.to(config.DEVICE)
+        labels = labels.to(config.DEVICE)
+
+        optimizer.zero_grad()
+
+        outputs = model(images)
+
+        loss = criterion(outputs, labels)
+
+        loss.backward()
+
+        optimizer.step()
+
+        running_loss += loss.item() * images.size(0)
+
+        predictions = outputs.argmax(dim=1)
+
+        all_labels.extend(labels.cpu().numpy())
+        all_predictions.extend(predictions.cpu().numpy())
+
+    epoch_loss = running_loss / len(loader.dataset)
+
+    epoch_accuracy = accuracy_score(
+        all_labels,
+        all_predictions,
+    )
+
+    epoch_f1 = f1_score(
+        all_labels,
+        all_predictions,
+        pos_label=config.POSITIVE_IDX,
+    )
+
+    return {
+    "train_loss": epoch_loss,
+    "train_accuracy": epoch_accuracy,
+    "train_f1": epoch_f1,
+    }
+
+
+def validate_one_epoch(
+    model: nn.Module,
+    loader: DataLoader,
+    criterion: nn.Module,
+) -> dict:
+    """
+    Evaluate the model for one validation epoch.
+
+    Parameters
+    ----------
+    model : nn.Module
+        Model to evaluate.
+
+    loader : DataLoader
+        Validation data loader.
+
+    criterion : nn.Module
+        Loss function.
+
+    Returns
+    -------
+    dict
+        Dictionary containing validation loss, accuracy and F1 score.
+    """
+
+    model.eval()
+
+    running_loss = 0.0
+
+    all_labels = []
+    all_predictions = []
+
+    with torch.no_grad():
+
+        for images, labels in loader:
+
+            images = images.to(config.DEVICE)
+            labels = labels.to(config.DEVICE)
+
+            outputs = model(images)
+
+            loss = criterion(outputs, labels)
+
+            running_loss += loss.item() * images.size(0)
+
+            predictions = outputs.argmax(dim=1)
+
+            all_labels.extend(labels.cpu().numpy())
+            all_predictions.extend(predictions.cpu().numpy())
+
+    epoch_loss = running_loss / len(loader.dataset)
+
+    epoch_accuracy = accuracy_score(
+        all_labels,
+        all_predictions,
+    )
+
+    epoch_f1 = f1_score(
+        all_labels,
+        all_predictions,
+        pos_label=config.POSITIVE_IDX,
+    )
+
+    return {
+        "val_loss": epoch_loss,
+        "val_accuracy": epoch_accuracy,
+        "val_f1": epoch_f1,
+    }
+
+def fit(
+    model: nn.Module,
+    train_loader: DataLoader,
+    val_loader: DataLoader,
+    criterion: nn.Module,
+    optimizer: torch.optim.Optimizer,
+):
+    """
+    Train the model with validation and early stopping.
+
+    Returns
+    -------
+    history : dict
+        Training history.
+
+    model_meta : dict
+        Information about the best model.
+    """
+
+    history = {
+        "train_loss": [],
+        "train_accuracy": [],
+        "train_f1": [],
+        "val_loss": [],
+        "val_accuracy": [],
+        "val_f1": [],
+    }
+
+    best_val_f1 = float("-inf")
+    best_epoch = 0
+    patience = 0
+
+    for epoch in range(config.EPOCHS):
+
+        train_metrics = train_one_epoch(
+            model,
+            train_loader,
+            criterion,
+            optimizer,
+        )
+
+        val_metrics = validate_one_epoch(
+            model,
+            val_loader,
+            criterion,
+        )
+
+        history["train_loss"].append(train_metrics["train_loss"])
+        history["train_accuracy"].append(train_metrics["train_accuracy"])
+        history["train_f1"].append(train_metrics["train_f1"])
+
+        history["val_loss"].append(val_metrics["val_loss"])
+        history["val_accuracy"].append(val_metrics["val_accuracy"])
+        history["val_f1"].append(val_metrics["val_f1"])
+
+        print(
+            f"Epoch {epoch + 1}/{config.EPOCHS} | "
+            f"Train F1: {train_metrics['train_f1']:.4f} | "
+            f"Val F1: {val_metrics['val_f1']:.4f}"
+        )
+
+        if val_metrics["val_f1"] > best_val_f1:
+
+            best_val_f1 = val_metrics["val_f1"]
+            best_epoch = epoch + 1
+
+            save_model(model)
+
+            patience = 0
+
+        else:
+
+            patience += 1
+
+        if patience >= config.EARLY_STOP_PATIENCE:
+
+            print("Early stopping triggered.")
+
+            break
+
+    model_meta = {
+        "backbone": config.BACKBONE,
+    "freeze_backbone": config.FREEZE_BACKBONE,
+    "best_epoch": best_epoch,
+    "epochs_trained": len(history["train_loss"]),
+    "best_val_f1": best_val_f1,
+    "learning_rate": config.LEARNING_RATE,
+    "batch_size": config.BATCH_SIZE,
+    "random_seed": config.RANDOM_SEED,
+    }
+
+    return history, model_meta
+
 def main() -> int:
     import mlflow, mlflow.pytorch
     from mlflow import MlflowClient
@@ -155,11 +396,54 @@ def main() -> int:
     weight_decay=config.WEIGHT_DECAY,
     )
     
+    # -------------------------------------------------
+    # Training
+    # -------------------------------------------------
+    history, model_meta = fit(
+        model,
+        train_loader,
+        val_loader,
+        criterion,
+        optimizer,
+    )
+
+
+    # -------------------------------------------------
+    # Add metadata
+    # -------------------------------------------------
+    model_meta.update(
+        {
+            "backbone": config.BACKBONE,
+            "freeze_backbone": config.FREEZE_BACKBONE,
+            "batch_size": config.BATCH_SIZE,
+            "learning_rate": config.LEARNING_RATE,
+            "random_seed": config.RANDOM_SEED,
+        }
+    )
+
+     # -------------------------------------------------
+    # Save artifacts
+    # -------------------------------------------------
+    config.MODEL_META_PATH.write_text(
+        json.dumps(model_meta, indent=2)
+    )
+
+    config.METRICS_PATH.write_text(
+        json.dumps(history, indent=2)
+    )
+
+    print("\nTraining completed successfully.")
+
+    print(f"Best Validation F1 : {model_meta['best_val_f1']:.4f}")
+    print(f"Best Epoch         : {model_meta['best_epoch']}")
+
+    return 0
+
     # TODO 3 (MLflow): set_experiment; start_run; log_params; per-epoch log_metrics; early stop.
     # TODO 3 (eval + registry): test metrics; plot_eval; save_model; log_model + register +
     #         set @production alias; write model_meta.json + metrics.json.
     # TODO 4: save_reference_baseline on a clean val sample.
-    raise NotImplementedError("Implement the training + MLflow + registry workflow")
+
 
 
 if __name__ == "__main__":

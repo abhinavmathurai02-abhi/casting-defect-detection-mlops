@@ -1,0 +1,156 @@
+{
+  "passed": true,
+  "warnings": [
+    "22 duplicate images detected. Review potential train-test data leakage."
+  ],
+  "total_images": 160,
+  "corrupt_images": [],
+  "corrupt_count": 0,
+  "invalid_dimensions": [],
+  "invalid_dimension_count": 0,
+  "duplicate_images": [
+    {
+      "hash": "adb6835b24c8c51e0a84cf82db119b13",
+      "original": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\train\\ok_front\\cast_ok_0_1001.jpeg",
+      "duplicate": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\ok_front\\cast_ok_0_1001.jpeg",
+      "cross_split": true
+    },
+    {
+      "hash": "c709806994db057026e31294dc5dbec4",
+      "original": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\train\\ok_front\\cast_ok_0_1002.jpeg",
+      "duplicate": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\ok_front\\cast_ok_0_1002.jpeg",
+      "cross_split": true
+    },
+    {
+      "hash": "0ef55c5885f532963a6343fe396b1a39",
+      "original": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\train\\ok_front\\cast_ok_0_1003.jpeg",
+      "duplicate": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\ok_front\\cast_ok_0_1003.jpeg",
+      "cross_split": true
+    },
+    {
+      "hash": "4d0e3e62ae890ab19afc51a83982e49a",
+      "original": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\train\\ok_front\\cast_ok_0_1019.jpeg",
+      "duplicate": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\ok_front\\cast_ok_0_1019.jpeg",
+      "cross_split": true
+    },
+    {
+      "hash": "8549274af999b900f3efd7e799c2f6c2",
+      "original": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\train\\ok_front\\cast_ok_0_1020.jpeg",
+      "duplicate": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\ok_front\\cast_ok_0_1020.jpeg",
+      "cross_split": true
+    },
+    {
+      "hash": "9fac08f441d046a839f777a6bb2119fc",
+      "original": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\train\\ok_front\\cast_ok_0_1021.jpeg",
+      "duplicate": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\ok_front\\cast_ok_0_1021.jpeg",
+      "cross_split": true
+    },
+    {
+      "hash": "033f2c3cd5e455eb823ad2c46d200437",
+      "original": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\train\\ok_front\\cast_ok_0_1022.jpeg",
+      "duplicate": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\ok_front\\cast_ok_0_1022.jpeg",
+      "cross_split": true
+    },
+    {
+      "hash": "75e28f04f2fabc7f544aea16e3e91c6a",
+      "original": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\train\\ok_front\\cast_ok_0_1026.jpeg",
+      "duplicate": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\ok_front\\cast_ok_0_1026.jpeg",
+      "cross_split": true
+    },
+    {
+      "hash": "3b20a1bcf173fb96413114c7fe1dfa20",
+      "original": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\train\\ok_front\\cast_ok_0_1028.jpeg",
+      "duplicate": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\ok_front\\cast_ok_0_1028.jpeg",
+      "cross_split": true
+    },
+    {
+      "hash": "e238233a9d1c4fac801c15a2cc026262",
+      "original": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\train\\ok_front\\cast_ok_0_1031.jpeg",
+      "duplicate": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\ok_front\\cast_ok_0_1031.jpeg",
+      "cross_split": true
+    },
+    {
+      "hash": "355f9117005af8490df8f9b4d8c44ea5",
+      "original": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\train\\ok_front\\cast_ok_0_1040.jpeg",
+      "duplicate": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\ok_front\\cast_ok_0_1040.jpeg",
+      "cross_split": true
+    },
+    {
+      "hash": "22ec0f424b08a80d97dde555e8323388",
+      "original": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\train\\ok_front\\cast_ok_0_1066.jpeg",
+      "duplicate": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\ok_front\\cast_ok_0_1066.jpeg",
+      "cross_split": true
+    },
+    {
+      "hash": "33a0b23b1e90d9863e33fa995fb939ac",
+      "original": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\train\\ok_front\\cast_ok_0_1069.jpeg",
+      "duplicate": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\ok_front\\cast_ok_0_1069.jpeg",
+      "cross_split": true
+    },
+    {
+      "hash": "37b99d4b316ea1d996f241cdd3191679",
+      "original": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\train\\ok_front\\cast_ok_0_1077.jpeg",
+      "duplicate": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\ok_front\\cast_ok_0_1077.jpeg",
+      "cross_split": true
+    },
+    {
+      "hash": "87da2cb93c2f5f9022cbd5dfb587bb2a",
+      "original": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\train\\ok_front\\cast_ok_0_1088.jpeg",
+      "duplicate": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\ok_front\\cast_ok_0_1088.jpeg",
+      "cross_split": true
+    },
+    {
+      "hash": "e65d7b2bf0ccf832df8b6bb25d3dcde5",
+      "original": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\train\\ok_front\\cast_ok_0_1092.jpeg",
+      "duplicate": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\ok_front\\cast_ok_0_1092.jpeg",
+      "cross_split": true
+    },
+    {
+      "hash": "8f921198befee5bea44cefbaa16dd824",
+      "original": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\train\\ok_front\\cast_ok_0_1093.jpeg",
+      "duplicate": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\ok_front\\cast_ok_0_1093.jpeg",
+      "cross_split": true
+    },
+    {
+      "hash": "05d1192be741dff53376c7b0df5d6c78",
+      "original": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\train\\ok_front\\cast_ok_0_1095.jpeg",
+      "duplicate": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\ok_front\\cast_ok_0_1095.jpeg",
+      "cross_split": true
+    },
+    {
+      "hash": "329e01de9631e5791a3be454a90a322c",
+      "original": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\train\\ok_front\\cast_ok_0_1096.jpeg",
+      "duplicate": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\ok_front\\cast_ok_0_1096.jpeg",
+      "cross_split": true
+    },
+    {
+      "hash": "fdda2b47f7f31bf375751b907df1d2da",
+      "original": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\train\\ok_front\\cast_ok_0_1120.jpeg",
+      "duplicate": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\ok_front\\cast_ok_0_1120.jpeg",
+      "cross_split": true
+    },
+    {
+      "hash": "8afd66573906b24fc15aba18c20fcdec",
+      "original": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\train\\ok_front\\cast_ok_0_1121.jpeg",
+      "duplicate": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\ok_front\\cast_ok_0_1121.jpeg",
+      "cross_split": true
+    },
+    {
+      "hash": "d483d59988b201312743099625efa9ef",
+      "original": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\train\\ok_front\\cast_ok_0_1127.jpeg",
+      "duplicate": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\ok_front\\cast_ok_0_1127.jpeg",
+      "cross_split": true
+    }
+  ],
+  "duplicate_count": 22,
+  "class_distribution": {
+    "train": {
+      "ok_front": 40,
+      "def_front": 40
+    },
+    "test": {
+      "ok_front": 40,
+      "def_front": 40
+    }
+  }
+}
