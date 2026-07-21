@@ -23,9 +23,9 @@ mlruns/
 # -----------------------
 # Model Files
 # -----------------------
-*.pt
-*.pth
-*.onnx
+#*.pt
+#*.pth
+#*.onnx
 
 # -----------------------
 # Logs
@@ -84,7 +84,7 @@ build/
 *.local
 
 # Trained models
-artifacts/model.pt
+#artifacts/model.pt
 
 # Future models
-artifacts/*.pt
+#artifacts/*.pt
