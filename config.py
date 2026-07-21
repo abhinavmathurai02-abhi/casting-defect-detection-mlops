@@ -85,6 +85,8 @@ MODEL_META_PATH = ARTIFACT_DIR / "model_meta.json"
 METRICS_PATH = ARTIFACT_DIR / "metrics.json"
 PREDICTIONS_LOG = ARTIFACT_DIR / "predictions.log"
 REFERENCE_EMBED = ARTIFACT_DIR / "reference_embeddings.npz"   # for embedding drift
+EVALUATION_PATH = ARTIFACT_DIR / "evaluation_metrics.json"
+FAILURE_CASES_PATH = ARTIFACT_DIR / "failure_cases.json"
 
 # --------------------------------------------------------------------------- #
 # Monitoring & drift detection

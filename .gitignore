@@ -82,3 +82,9 @@ build/
 
 # Local settings
 *.local
+
+# Trained models
+artifacts/model.pt
+
+# Future models
+artifacts/*.pt

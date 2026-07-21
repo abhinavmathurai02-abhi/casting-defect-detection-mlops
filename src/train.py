@@ -23,6 +23,9 @@ from sklearn.metrics import accuracy_score, f1_score
 import mlflow
 import mlflow.pytorch
 from mlflow import MlflowClient
+import copy
+
+client = MlflowClient()
 
 
 def set_seed(seed: int = config.RANDOM_SEED):
@@ -297,6 +300,7 @@ def fit(
     best_val_f1 = float("-inf")
     best_epoch = 0
     patience = 0
+    best_state = None
 
     for epoch in range(config.EPOCHS):
 
@@ -344,6 +348,8 @@ def fit(
             best_val_f1 = val_metrics["val_f1"]
             best_epoch = epoch + 1
 
+            best_state = copy.deepcopy(model.state_dict())
+
             save_model(model)
 
             patience = 0
@@ -357,6 +363,9 @@ def fit(
             print("Early stopping triggered.")
 
             break
+
+        if best_state is not None:
+            model.load_state_dict(best_state)
 
     model_meta = {
     "backbone": config.BACKBONE,
@@ -455,18 +464,92 @@ def main() -> int:
              criterion,
              optimizer,
         )
+
+        # -------------------------------------------------
+        # Evaluate on test set
+        # -------------------------------------------------
+        y_true, y_pred, y_prob = evaluate.predict(
+            model,
+            test_loader,
+        )
+
+        evaluation_metrics = evaluate.compute_metrics(
+            y_true,
+            y_pred,
+            y_prob,
+        )
+
+        evaluation_plot = evaluate.plot_eval(
+            y_true,
+            y_pred,
+            y_prob,
+        )
+
+        test_items = data_prep.load_split(
+            "v1",
+            "test",
+            root,
+        )
+
+        failures = evaluate.failure_cases(
+            test_items,
+            y_true,
+            y_pred,
+            y_prob,
+        )
+    # -------------------------------------------------
+    # Save evaluation artifacts
+    # -------------------------------------------------
+        config.EVALUATION_PATH.write_text(
+            json.dumps(
+                evaluation_metrics,
+                indent=2,
+            )
+        )
+
+        config.FAILURE_CASES_PATH.write_text(
+            json.dumps(
+                failures,
+                indent=2,
+            )
+        )
+
+    # -------------------------------------------------
+    # Log evaluation metrics
+    # -------------------------------------------------
+        mlflow.log_metrics(
+            {
+               key: value
+               for key, value in evaluation_metrics.items()
+               if isinstance(value, (int, float))
+           }
+        )
     
     # -----------------------------
     # Log trained model
     # -----------------------------
-        mlflow.pytorch.log_model(
+        logged_model = mlflow.pytorch.log_model(
             pytorch_model=model,
             name="model",
+        )
+
+    # -------------------------------------------------
+    # Register model
+    # -------------------------------------------------
+        registered_model = mlflow.register_model(
+            model_uri=logged_model.model_uri,
+            name=config.REGISTERED_MODEL,
         )
 
         mlflow.log_metric(
             "best_val_f1",
             model_meta["best_val_f1"],
+        )
+
+        client.set_registered_model_alias(
+            name=config.REGISTERED_MODEL,
+            alias=config.PRODUCTION_ALIAS,
+            version=registered_model.version,
         )
     # -------------------------------------------------
     # Add metadata
@@ -500,11 +583,24 @@ def main() -> int:
         mlflow.log_artifact(
             str(config.ARTIFACT_DIR / "data_quality_report.json")
         )
+        mlflow.log_artifact(
+            str(config.EVALUATION_PATH)
+        )
+
+        mlflow.log_artifact(
+            str(evaluation_plot)
+        )
+
+        mlflow.log_artifact(
+            str(config.FAILURE_CASES_PATH)
+        )
 
     print("\nTraining completed successfully.")
 
     print(f"Best Validation F1 : {model_meta['best_val_f1']:.4f}")
     print(f"Best Epoch         : {model_meta['best_epoch']}")
+    print(f"Registered Model Version : {registered_model.version}")
+    print(f"Production Alias         : {config.PRODUCTION_ALIAS}")
 
     return 0
 
