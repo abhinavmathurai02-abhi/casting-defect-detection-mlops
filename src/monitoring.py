@@ -29,8 +29,66 @@ from src.model import load_model, EmbeddingExtractor
 
 
 def psi(reference, current, bins: int = 10) -> float:
-    # TODO 4: Population Stability Index between two 1-D distributions (quantile bins).
-    raise NotImplementedError
+    """
+    Compute Population Stability Index (PSI) between two 1-D distributions.
+
+    Parameters
+    ----------
+    reference : array-like
+        Reference distribution.
+
+    current : array-like
+        Current distribution.
+
+    bins : int
+        Number of quantile bins.
+
+    Returns
+    -------
+    float
+        PSI value.
+    """
+
+    reference = np.asarray(reference).ravel()
+    current = np.asarray(current).ravel()
+
+    # Quantile bin edges from the reference distribution
+    edges = np.quantile(
+        reference,
+        np.linspace(0, 1, bins + 1),
+    )
+
+    # Ensure strictly increasing edges
+    edges = np.unique(edges)
+
+    # Fallback if all values are identical
+    if len(edges) < 2:
+        return 0.0
+
+    ref_hist, _ = np.histogram(
+        reference,
+        bins=edges,
+    )
+
+    cur_hist, _ = np.histogram(
+        current,
+        bins=edges,
+    )
+
+    ref_pct = ref_hist / len(reference)
+    cur_pct = cur_hist / len(current)
+
+    eps = 1e-6
+
+    ref_pct = np.clip(ref_pct, eps, None)
+    cur_pct = np.clip(cur_pct, eps, None)
+
+    return float(
+        np.sum(
+            (cur_pct - ref_pct)
+            * np.log(cur_pct / ref_pct)
+        )
+    )
 
 
 def corrupt(img: Image.Image) -> Image.Image:

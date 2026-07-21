@@ -63,9 +63,9 @@ def health() -> dict:
     model_loaded = _state["model"] is not None
 
     return {
-        "status": "healthy" if model_loaded else "unavailable",
+        "status": "ok",
         "model_loaded": model_loaded,
-        "classes": config.CLASSES,
+        "classes": config.CLASS_TO_IDX,
         "positive_class": config.POSITIVE_CLASS,
         "model_info": _state["meta"],
         "registered_model": config.REGISTERED_MODEL,
