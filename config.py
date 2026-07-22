@@ -88,6 +88,17 @@ REFERENCE_EMBED = ARTIFACT_DIR / "reference_embeddings.npz"   # for embedding dr
 EVALUATION_PATH = ARTIFACT_DIR / "evaluation_metrics.json"
 FAILURE_CASES_PATH = ARTIFACT_DIR / "failure_cases.json"
 
+# -------------------------------------------------
+# Monitoring Artifacts
+# -------------------------------------------------
+
+DRIFT_SUMMARY_PATH = ARTIFACT_DIR / "drift_summary.json"
+
+DRIFT_REPORT_PATH = ARTIFACT_DIR / "drift_report.html"
+
+
+#PREDICTIONS_LOG = ARTIFACT_DIR / "predictions.log"
+
 # --------------------------------------------------------------------------- #
 # Monitoring & drift detection
 # --------------------------------------------------------------------------- #

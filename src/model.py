@@ -75,15 +75,35 @@ def trainable_parameters(net: nn.Module):
 
 
 class EmbeddingExtractor(nn.Module):
-    """Expose the 512-dim penultimate features (drop the fc layer)."""
+    """
+    Expose the 512-dimensional penultimate embedding
+    from ResNet18 (everything except the final FC layer).
+    """
+
     def __init__(self, net: nn.Module):
         super().__init__()
-        # TODO 4 (embedding drift): keep all layers except the final fc.
-        raise NotImplementedError("Wrap the backbone to output pre-fc embeddings")
+
+        # Keep every layer except the final classifier
+        self.backbone = nn.Sequential(
+            *list(net.children())[:-1]
+        )
 
     @torch.no_grad()
     def forward(self, x):
-        raise NotImplementedError
+
+        features = self.backbone(x)
+
+        # Shape:
+        # (batch_size, 512, 1, 1)
+        features = torch.flatten(
+            features,
+            start_dim=1,
+        )
+
+        # Shape:
+        # (batch_size, 512)
+        return features
+
 
 
 def save_model(net: nn.Module, path: Path | None = None) -> None:

@@ -1,0 +1,16 @@
+{
+  "reference_confidence": 0.5554,
+  "current_confidence": 0.5455,
+  "confidence_drop": 0.0099,
+  "confidence_alert": false,
+  "mean_statistical_psi": 26.3624,
+  "embedding_psi": 25.25,
+  "retrain_recommended": true,
+  "feature_psi": {
+    "brightness": 26.0098,
+    "contrast": 25.5548,
+    "edge_density": 27.5141,
+    "sharpness": 26.7238,
+    "mean_intensity": 26.0098
+  }
+}
