@@ -1,0 +1,13 @@
+{
+  "retraining_triggered": true,
+  "drift_share": 1.0,
+  "confidence_drop": 0.0099,
+  "embedding_psi": 25.25,
+  "candidate_registered": true,
+  "production_model_version": 3,
+  "production_run_id": "409328d2e925414ba8ce654ca8b5b311",
+  "production_f1": 0.6667,
+  "candidate_f1": 0.6667,
+  "promotion_threshold": 0.01,
+  "action": "rollback"
+}

@@ -638,9 +638,7 @@ def image_features(img: Image.Image) -> dict:
 
         "edge_density": round(float(edge_density), 3),
 
-        "sharpness": round(sharpness, 3),
-
-        "mean_intensity": round(mean_intensity, 3)
+        "sharpness": round(sharpness, 3)
 
     }
 

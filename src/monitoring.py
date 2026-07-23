@@ -46,7 +46,7 @@ except Exception:
     EVIDENTLY_AVAILABLE = False
 
 
-def psi(reference, current, bins: int = 10) -> float:
+def psi(reference, current, bins: int = 5) -> float:
     """
     Compute Population Stability Index (PSI) between two 1-D distributions.
 
@@ -96,7 +96,7 @@ def psi(reference, current, bins: int = 10) -> float:
     ref_pct = ref_hist / ref_hist.sum()
     cur_pct = cur_hist / cur_hist.sum()
 
-    eps = 1e-6
+    eps = 1e-3
 
     ref_pct = np.clip(ref_pct, eps, None)
     cur_pct = np.clip(cur_pct, eps, None)
@@ -148,14 +148,18 @@ def corrupt(img: Image.Image) -> Image.Image:
     # -----------------------------
     arr = np.array(img).astype(np.float32)
 
-    noise = np.random.normal(
-        loc=0,
-        scale=config.DRIFT_SIM["noise_std"],
-        size=arr.shape,
-    )
+    if config.DRIFT_SIM["noise_std"] > 0:
+
+        noise = np.random.normal(
+            loc=0,
+            scale=config.DRIFT_SIM["noise_std"],
+            size=arr.shape,
+        )
+
+        arr = arr + noise
 
     arr = np.clip(
-        arr + noise,
+        arr,
         0,
         255,
     ).astype(np.uint8)
@@ -217,10 +221,21 @@ def run() -> dict:
 
     tf = data_prep.get_transforms(train=False)
 
-    reference_dir = root / "test" / "ok_front"
+# -------------------------------------------------
+# Build the reference batch using both classes
+# -------------------------------------------------
+    reference_paths = []
 
-    reference_paths = sorted(
-        reference_dir.glob("*.jpeg")
+    reference_paths.extend(
+        sorted(
+            (root / "test" / "ok_front").glob("*.jpeg")
+        )
+    )
+
+    reference_paths.extend(
+        sorted(
+            (root / "test" / "def_front").glob("*.jpeg")
+        )
     )
 
     reference_features = []
@@ -288,6 +303,39 @@ def run() -> dict:
 
     current_df = pd.DataFrame(
         current_features
+    )
+
+    # Temporary: print summary statistics to console for quick inspection
+
+    print("\nReference statistics")
+    print(reference_df.describe())
+
+    print("\nCurrent statistics")
+    print(current_df.describe())
+
+
+    edges = np.quantile(
+        reference_df["brightness"],
+        np.linspace(0, 1, 6),
+    )
+
+    print("\nBin edges:")
+    print(edges)
+
+    print("\nReference histogram:")
+    print(
+        np.histogram(
+            reference_df["brightness"],
+            bins=edges,
+        )[0]
+    )
+
+    print("\nCurrent histogram:")
+    print(
+        np.histogram(
+            current_df["brightness"],
+            bins=edges,
+        )[0]
     )
 
     statistical_psi = {}

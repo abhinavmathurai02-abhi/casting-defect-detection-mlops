@@ -104,14 +104,14 @@ DRIFT_REPORT_PATH = ARTIFACT_DIR / "drift_report.html"
 # --------------------------------------------------------------------------- #
 # Statistical drift: per-image summary features (brightness, contrast, edge density,
 # sharpness) compared reference vs current with Evidently + PSI.
-DRIFT_FEATURES = ["brightness", "contrast", "edge_density", "sharpness", "mean_intensity"]
+DRIFT_FEATURES = ["brightness", "contrast", "edge_density", "sharpness"]
 PSI_THRESHOLD = 0.20                          # >0.2 = significant feature drift
 EMBEDDING_DRIFT_THRESHOLD = 0.10              # PSI on the embedding-distance distribution
 CONFIDENCE_DROP_THRESHOLD = 0.10              # mean-confidence drop vs reference → alert
 DRIFT_SHARE_THRESHOLD = 0.40                  # share of drifted features that triggers retrain
 
 # Simulated "production" corruption to demonstrate drift (camera/lighting degradation).
-DRIFT_SIM = {"brightness": 0.6, "blur_radius": 1.5, "noise_std": 12, "rotate": 8}
+DRIFT_SIM = {"brightness": 0.90, "blur_radius": 0.5, "noise_std": 0, "rotate": 2}
 
 # --------------------------------------------------------------------------- #
 # Retraining / rollback governance
