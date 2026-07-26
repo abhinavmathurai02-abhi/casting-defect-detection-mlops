@@ -4,10 +4,10 @@
   "confidence_drop": 0.0907,
   "embedding_psi": 12.3744,
   "candidate_registered": true,
-  "production_model_version": 5,
-  "production_run_id": "74816ab1fe974fb4be765a300ba2d84f",
-  "production_f1": 0.9474,
-  "candidate_f1": 0.9474,
+  "production_model_version": 7,
+  "production_run_id": "1ea43022bb7f4ee093062ce2ac738841",
+  "production_f1": 0.9572,
+  "candidate_f1": 0.9572,
   "promotion_threshold": 0.01,
   "action": "rollback"
 }

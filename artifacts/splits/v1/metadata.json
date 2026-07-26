@@ -1,6 +1,6 @@
 {
     "dataset_version": "v1",
-    "created_at": "2026-07-24 14:15:01",
+    "created_at": "2026-07-26 14:38:46",
     "random_seed": 42,
     "validation_split": 0.15,
     "positive_class": "def_front",

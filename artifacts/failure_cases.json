@@ -1,122 +1,122 @@
 [
   {
+    "image": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\ok_front\\cast_ok_0_1028.jpeg",
+    "actual": "ok_front",
+    "predicted": "def_front",
+    "p_defect": 0.5081
+  },
+  {
+    "image": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\ok_front\\cast_ok_0_1040.jpeg",
+    "actual": "ok_front",
+    "predicted": "def_front",
+    "p_defect": 0.6052
+  },
+  {
+    "image": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\ok_front\\cast_ok_0_1141.jpeg",
+    "actual": "ok_front",
+    "predicted": "def_front",
+    "p_defect": 0.5377
+  },
+  {
+    "image": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\ok_front\\cast_ok_0_1160.jpeg",
+    "actual": "ok_front",
+    "predicted": "def_front",
+    "p_defect": 0.527
+  },
+  {
+    "image": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\ok_front\\cast_ok_0_1203.jpeg",
+    "actual": "ok_front",
+    "predicted": "def_front",
+    "p_defect": 0.6852
+  },
+  {
+    "image": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\ok_front\\cast_ok_0_1207.jpeg",
+    "actual": "ok_front",
+    "predicted": "def_front",
+    "p_defect": 0.6087
+  },
+  {
+    "image": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\ok_front\\cast_ok_0_16.jpeg",
+    "actual": "ok_front",
+    "predicted": "def_front",
+    "p_defect": 0.5878
+  },
+  {
+    "image": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\ok_front\\cast_ok_0_2330.jpeg",
+    "actual": "ok_front",
+    "predicted": "def_front",
+    "p_defect": 0.537
+  },
+  {
     "image": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\ok_front\\cast_ok_0_2340.jpeg",
     "actual": "ok_front",
     "predicted": "def_front",
-    "p_defect": 0.545
+    "p_defect": 0.7184
   },
   {
     "image": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\ok_front\\cast_ok_0_2700.jpeg",
     "actual": "ok_front",
     "predicted": "def_front",
-    "p_defect": 0.5374
+    "p_defect": 0.698
+  },
+  {
+    "image": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\ok_front\\cast_ok_0_2807.jpeg",
+    "actual": "ok_front",
+    "predicted": "def_front",
+    "p_defect": 0.5998
   },
   {
     "image": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\ok_front\\cast_ok_0_2915.jpeg",
     "actual": "ok_front",
     "predicted": "def_front",
-    "p_defect": 0.7451
+    "p_defect": 0.8965
+  },
+  {
+    "image": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\ok_front\\cast_ok_0_4497.jpeg",
+    "actual": "ok_front",
+    "predicted": "def_front",
+    "p_defect": 0.5197
+  },
+  {
+    "image": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\ok_front\\cast_ok_0_525.jpeg",
+    "actual": "ok_front",
+    "predicted": "def_front",
+    "p_defect": 0.5975
   },
   {
     "image": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\ok_front\\cast_ok_0_7839.jpeg",
     "actual": "ok_front",
     "predicted": "def_front",
-    "p_defect": 0.5926
+    "p_defect": 0.7856
+  },
+  {
+    "image": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\ok_front\\cast_ok_0_864.jpeg",
+    "actual": "ok_front",
+    "predicted": "def_front",
+    "p_defect": 0.5301
   },
   {
     "image": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\ok_front\\cast_ok_0_927.jpeg",
     "actual": "ok_front",
     "predicted": "def_front",
-    "p_defect": 0.5413
+    "p_defect": 0.7395
+  },
+  {
+    "image": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\ok_front\\cast_ok_0_937.jpeg",
+    "actual": "ok_front",
+    "predicted": "def_front",
+    "p_defect": 0.6356
   },
   {
     "image": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\ok_front\\cast_ok_0_973.jpeg",
     "actual": "ok_front",
     "predicted": "def_front",
-    "p_defect": 0.5683
+    "p_defect": 0.7653
   },
   {
-    "image": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\ok_front\\cast_ok_0_9967.jpeg",
+    "image": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\ok_front\\cast_ok_0_989.jpeg",
     "actual": "ok_front",
     "predicted": "def_front",
-    "p_defect": 0.5856
-  },
-  {
-    "image": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\def_front\\cast_def_0_1264.jpeg",
-    "actual": "def_front",
-    "predicted": "ok_front",
-    "p_defect": 0.4779
-  },
-  {
-    "image": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\def_front\\cast_def_0_1399.jpeg",
-    "actual": "def_front",
-    "predicted": "ok_front",
-    "p_defect": 0.4472
-  },
-  {
-    "image": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\def_front\\cast_def_0_1424.jpeg",
-    "actual": "def_front",
-    "predicted": "ok_front",
-    "p_defect": 0.0966
-  },
-  {
-    "image": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\def_front\\cast_def_0_1471.jpeg",
-    "actual": "def_front",
-    "predicted": "ok_front",
-    "p_defect": 0.1308
-  },
-  {
-    "image": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\def_front\\cast_def_0_15.jpeg",
-    "actual": "def_front",
-    "predicted": "ok_front",
-    "p_defect": 0.0852
-  },
-  {
-    "image": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\def_front\\cast_def_0_150.jpeg",
-    "actual": "def_front",
-    "predicted": "ok_front",
-    "p_defect": 0.1522
-  },
-  {
-    "image": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\def_front\\cast_def_0_1539.jpeg",
-    "actual": "def_front",
-    "predicted": "ok_front",
-    "p_defect": 0.3986
-  },
-  {
-    "image": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\def_front\\cast_def_0_1570.jpeg",
-    "actual": "def_front",
-    "predicted": "ok_front",
-    "p_defect": 0.2211
-  },
-  {
-    "image": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\def_front\\cast_def_0_1589.jpeg",
-    "actual": "def_front",
-    "predicted": "ok_front",
-    "p_defect": 0.4566
-  },
-  {
-    "image": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\def_front\\cast_def_0_1591.jpeg",
-    "actual": "def_front",
-    "predicted": "ok_front",
-    "p_defect": 0.431
-  },
-  {
-    "image": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\def_front\\cast_def_0_1607.jpeg",
-    "actual": "def_front",
-    "predicted": "ok_front",
-    "p_defect": 0.1933
-  },
-  {
-    "image": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\def_front\\cast_def_0_1640.jpeg",
-    "actual": "def_front",
-    "predicted": "ok_front",
-    "p_defect": 0.4319
-  },
-  {
-    "image": "C:\\Users\\Abhinav\\Capstone_MLOps\\MLOps_2_Starter\\data\\casting_data\\test\\def_front\\cast_def_0_1688.jpeg",
-    "actual": "def_front",
-    "predicted": "ok_front",
-    "p_defect": 0.4282
+    "p_defect": 0.5483
   }
 ]

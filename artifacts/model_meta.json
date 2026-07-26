@@ -2,7 +2,7 @@
   "backbone": "resnet18",
   "freeze_backbone": true,
   "best_epoch": 3,
-  "epochs_trained": 4,
+  "epochs_trained": 6,
   "best_val_f1": 0.9684400360685302,
   "learning_rate": 0.001,
   "batch_size": 32,
