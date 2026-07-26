@@ -62,3 +62,380 @@ repositories, ZIPs, HTML or JSON files.
 * Test **recall on defects** is the headline metric; report F1 + ROC-AUC + confusion.
 * `monitoring` flags **statistical and embedding** drift; `retrain` makes a promote/rollback decision.
 * MLflow registry shows `casting_defect_classifier` with a `@production` alias.
+
+
+# Casting Defect Detection using End-to-End MLOps Pipeline
+
+## Project Overview
+
+This project implements an end-to-end MLOps pipeline for automated visual inspection of submersible pump impeller castings using Deep Learning and modern MLOps practices.
+
+The objective is to classify casting images into:
+
+-  OK Casting (`ok_front`)
+-  Defective Casting (`def_front`)
+
+The project demonstrates the complete machine learning lifecycle, including data preparation, transfer learning, experiment tracking, model evaluation, monitoring, retraining governance, Docker deployment, and CI/CD automation.
+
+This capstone was implemented as part of the **MLOps Specialization** using production-oriented engineering practices.
+
+---
+
+# Business Problem
+
+Manual inspection of industrial castings is time-consuming, expensive, and susceptible to human error.
+
+Manufacturing industries require automated inspection systems capable of:
+
+- Detecting defective castings accurately
+- Reducing inspection time
+- Improving production quality
+- Supporting continuous monitoring in production environments
+
+This project addresses these challenges using computer vision, transfer learning, and an end-to-end MLOps workflow.
+
+---
+
+# Dataset
+
+**Dataset**
+
+Casting Product Image Data for Quality Inspection
+
+Images represent top-view grayscale photographs of submersible pump impellers.
+
+### Dataset Statistics
+
+| Split | OK | Defective | Total |
+|--------|----:|----------:|------:|
+| Train | 2875 | 3758 | 6633 |
+| Test | 262 | 453 | 715 |
+| **Total** | **3137** | **4211** | **7348** |
+
+Image Size
+
+- 300 × 300 pixels
+- Grayscale
+- Augmented dataset supplied by Kaggle
+
+---
+
+# Project Architecture
+
+```
+                Kaggle Dataset
+                      │
+                      ▼
+            Data Validation
+                      │
+                      ▼
+          Dataset Versioning
+                      │
+                      ▼
+      Image Preprocessing & Augmentation
+                      │
+                      ▼
+      Transfer Learning (ResNet18)
+                      │
+                      ▼
+          Model Training
+                      │
+                      ▼
+         MLflow Experiment Tracking
+                      │
+                      ▼
+          Model Evaluation
+                      │
+                      ▼
+        Model Registry (MLflow)
+                      │
+                      ▼
+       Monitoring & Drift Detection
+                      │
+                      ▼
+     Automatic Retraining Decision
+                      │
+                      ▼
+         FastAPI Inference API
+                      │
+                      ▼
+        Docker + GitHub Actions
+```
+
+---
+
+# Project Structure
+
+```
+.
+├── artifacts/
+├── data/
+├── src/
+│   ├── data_prep.py
+│   ├── dataset.py
+│   ├── evaluate.py
+│   ├── model.py
+│   ├── monitoring.py
+│   ├── retrain.py
+│   └── train.py
+│
+├── Data_Preparation.ipynb
+├── Model_Development_and_Tracking.ipynb
+├── Operations_Monitoring_and_Evidence.ipynb
+├── app.py
+├── config.py
+├── Dockerfile
+├── requirements.txt
+└── README.md
+```
+
+---
+
+# Technology Stack
+
+| Category | Technology |
+|------------|----------------|
+| Language | Python 3.11 |
+| Deep Learning | PyTorch |
+| Computer Vision | TorchVision |
+| Experiment Tracking | MLflow |
+| API | FastAPI |
+| Deployment | Docker |
+| CI/CD | GitHub Actions |
+| Monitoring | Evidently + PSI |
+| Data Processing | NumPy, Pandas |
+| Visualisation | Matplotlib |
+| Testing | PyTest |
+
+---
+
+# MLOps Workflow
+
+The project follows an end-to-end MLOps workflow consisting of:
+
+- Business Understanding
+- Data Quality Validation
+- Dataset Versioning
+- Exploratory Data Analysis
+- Image Preprocessing
+- Transfer Learning
+- Model Training
+- Experiment Tracking
+- Model Registry
+- Model Evaluation
+- Model Deployment
+- Monitoring
+- Drift Detection
+- Automated Retraining
+- Governance
+- Continuous Integration
+
+---
+
+# Model Development
+
+## Backbone
+
+- ResNet18
+- ImageNet Pre-trained
+
+Transfer Learning Strategy
+
+- Frozen Backbone
+- Trainable Classification Head
+
+Training Configuration
+
+| Parameter | Value |
+|------------|---------|
+| Epochs | 8 |
+| Batch Size | 32 |
+| Learning Rate | 0.001 |
+| Optimizer | Adam |
+| Weight Decay | 1e-4 |
+| Early Stopping | Patience = 3 |
+
+---
+
+# Experiment Tracking
+
+MLflow was used for:
+
+- Experiment Tracking
+- Hyperparameter Logging
+- Metric Logging
+- Model Versioning
+- Model Registry
+
+Registered Model
+
+```
+casting_defect_classifier
+```
+
+Latest Registered Version
+
+```
+Version 6
+```
+
+---
+
+# Model Performance
+
+Evaluation was performed on the independent test dataset.
+
+| Metric | Score |
+|----------|---------|
+| Accuracy | **93.57%** |
+| Precision | **98.34%** |
+| Recall | **91.39%** |
+| F1 Score | **94.74%** |
+| Macro F1 | **93.23%** |
+| ROC-AUC | **0.9860** |
+
+Confusion Matrix
+
+| | Predicted OK | Predicted Defect |
+|---|---:|---:|
+| Actual OK | 255 | 7 |
+| Actual Defect | 39 | 414 |
+
+These results demonstrate strong defect detection capability with a high ROC-AUC and excellent precision.
+
+---
+
+# Monitoring & Drift Detection
+
+The monitoring pipeline evaluates production data using:
+
+- Statistical Drift (PSI)
+- Embedding Drift
+- Confidence Monitoring
+
+Example Monitoring Results
+
+| Metric | Value |
+|----------|---------|
+| Mean PSI | 13.069 |
+| Embedding PSI | 12.374 |
+| Confidence Drop | 0.0907 |
+| Drift Detected | Yes |
+| Retraining Triggered | Yes |
+
+Monitoring outputs include:
+
+- Drift Summary
+- Drift Report
+- Confidence Monitoring
+- Embedding Drift Detection
+- Retraining Decision
+
+---
+
+# Retraining & Governance
+
+When significant drift is detected:
+
+1. Candidate model is retrained.
+2. Candidate model is evaluated.
+3. Candidate model is registered in MLflow.
+4. Governance policy determines promotion or rollback.
+
+This project demonstrates an automated retraining workflow with model governance.
+
+---
+
+# Docker Deployment
+
+The inference service is containerised using Docker.
+
+```
+docker build -t casting-defect-api .
+```
+
+Run
+
+```
+docker run -p 8000:8000 casting-defect-api
+```
+
+---
+
+# Continuous Integration
+
+GitHub Actions automatically performs:
+
+- Dependency Installation
+- Unit Testing
+- Docker Build Validation
+
+All implemented tests passed successfully.
+
+```
+8 tests passed
+```
+
+---
+
+# Key Features
+
+✔ Modular Project Structure
+
+✔ Transfer Learning using ResNet18
+
+✔ MLflow Experiment Tracking
+
+✔ Model Registry
+
+✔ Automated Evaluation
+
+✔ PSI-based Drift Detection
+
+✔ Embedding Drift Detection
+
+✔ Confidence Monitoring
+
+✔ Automated Retraining
+
+✔ Docker Deployment
+
+✔ GitHub Actions CI
+
+✔ Production-ready Project Organisation
+
+---
+
+# Future Improvements
+
+Potential future enhancements include:
+
+- Fine-tuning the complete backbone
+- GPU training support
+- Kubernetes deployment
+- Real-time monitoring dashboard
+- Model signature logging in MLflow
+- Explainable AI using Grad-CAM
+- Multi-class defect classification
+
+---
+
+# Results Summary
+
+- Successfully trained on the complete Kaggle dataset (7,348 images)
+- Achieved **94.74% F1-score** on the test dataset
+- Achieved **98.60% ROC-AUC**
+- Implemented complete MLOps lifecycle
+- Automated monitoring and retraining pipeline
+- Containerised inference service
+- Integrated CI/CD using GitHub Actions
+
+---
+
+# Author
+
+**Abhinav Mathur**
+
+Senior Quality Engineering Manager | AI & MLOps Enthusiast
+
+MLOps Capstone Project
