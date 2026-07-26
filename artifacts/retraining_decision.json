@@ -1,13 +1,13 @@
 {
   "retraining_triggered": true,
   "drift_share": 1.0,
-  "confidence_drop": 0.0099,
-  "embedding_psi": 25.25,
+  "confidence_drop": 0.0907,
+  "embedding_psi": 12.3744,
   "candidate_registered": true,
-  "production_model_version": 3,
-  "production_run_id": "409328d2e925414ba8ce654ca8b5b311",
-  "production_f1": 0.6667,
-  "candidate_f1": 0.6667,
+  "production_model_version": 5,
+  "production_run_id": "74816ab1fe974fb4be765a300ba2d84f",
+  "production_f1": 0.9474,
+  "candidate_f1": 0.9474,
   "promotion_threshold": 0.01,
   "action": "rollback"
 }

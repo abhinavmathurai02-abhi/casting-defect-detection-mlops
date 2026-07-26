@@ -88,3 +88,14 @@ build/
 
 # Future models
 #artifacts/*.pt
+
+# Dataset
+data/casting_data/
+data/casting_data_sample/
+
+# Generated artifacts
+mlruns/
+artifacts/model.pt
+artifacts/reference_embeddings.npz
+__pycache__/
+.ipynb_checkpoints/

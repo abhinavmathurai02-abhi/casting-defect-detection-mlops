@@ -1,15 +1,16 @@
 {
-  "reference_confidence": 0.5554,
-  "current_confidence": 0.5739,
-  "confidence_drop": -0.0185,
+  "reference_confidence": 0.8802,
+  "current_confidence": 0.7895,
+  "confidence_drop": 0.0907,
   "confidence_alert": false,
-  "mean_statistical_psi": 2.3992,
-  "embedding_psi": 3.2134,
+  "mean_statistical_psi": 13.069,
+  "embedding_psi": 12.3744,
   "retrain_recommended": true,
   "feature_psi": {
-    "brightness": 5.9586,
-    "contrast": 2.3091,
-    "edge_density": 0.2569,
-    "sharpness": 1.0721
+    "brightness": 13.1031,
+    "contrast": 12.3407,
+    "edge_density": 13.8017,
+    "sharpness": 12.9964,
+    "mean_intensity": 13.1031
   }
 }

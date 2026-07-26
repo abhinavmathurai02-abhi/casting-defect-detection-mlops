@@ -59,12 +59,13 @@ AUG = {
 BACKBONE = "resnet18"                         # torchvision pretrained
 FREEZE_BACKBONE = True                        # transfer learning: train the head only
 EMBEDDING_DIM = 512                           # resnet18 penultimate feature size
-EPOCHS = int(os.getenv("EPOCHS", "4"))
+EPOCHS = int(os.getenv("EPOCHS", "8"))
 BATCH_SIZE = int(os.getenv("BATCH_SIZE", "32"))
 # Cap training images for a fast CPU run (stratified subsample). Casting defect detection
 # saturates well above 95% with a few thousand images. Set MAX_TRAIN_IMAGES=0 for the full
 # ~6,600-image train set. Validation and TEST always use their full splits (honest metrics).
-MAX_TRAIN_IMAGES = int(os.getenv("MAX_TRAIN_IMAGES", "2500"))
+#MAX_TRAIN_IMAGES = int(os.getenv("MAX_TRAIN_IMAGES", "2500"))
+MAX_TRAIN_IMAGES = 0
 LEARNING_RATE = 1e-3
 WEIGHT_DECAY = 1e-4
 NUM_WORKERS = int(os.getenv("NUM_WORKERS", "0"))   # 0 = safe/deterministic on CPU/macOS
